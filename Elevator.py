@@ -96,6 +96,7 @@ class ElevatorNES:
                 if self.freeElevs and self.peopleQueue:
                     elevs, nfree = round_robin(self.peopleQueue, self.freeElevs)
                     self.freeElevs = nfree
+                    print(elevs)
                     for e in elevs:
                         e.sort()
                         tot_delay = enterExit(len(e))
