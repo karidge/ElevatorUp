@@ -67,7 +67,7 @@ class ElevatorNES:
             hq.heappush(self.eventList, (firstArrival.at, next(self.counter), firstArrival))
             
             while (len(self.eventList) > 0) :
-                _, event = hq.heappop(self.eventList)
+                _, _, event = hq.heappop(self.eventList)
                 self.t = event.at
                 
                 # PROCESS EVENT (GROUP_ARRIVAL)
