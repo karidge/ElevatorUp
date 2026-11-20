@@ -17,7 +17,12 @@ class Event:
         self.groupSize = 0
         self.elev = []
         self.floor = 0
-        self.tDepart = 0
+        self.nStops = 0
+
+class Person:
+    def __init__(self, dest, at):
+        self.dest = dest
+        self.at = at
 
 class ElevatorNES:
     def __init__(self, nfloor, nelev, tfile, ndays):
@@ -78,7 +83,7 @@ class ElevatorNES:
                 if event.type == EventType.GROUP_ARRIVAL:
                     for _ in range(event.groupSize):
                         ind = Equilikely(0, len(self.setF)-1, self.trace)
-                        p = self.setF[ind][0]
+                        p = Person(self.setF[ind][0], self.t)
                         self.peopleQueue.append(p)
                         self.setF[ind][1] -= 1
                         if self.setF[ind][1] == 0:
@@ -93,17 +98,16 @@ class ElevatorNES:
 
                 # PROCESS EVENT (ELEVATOR_STOP)
                 elif event.type == EventType.ELEVATOR_STOP:
-                    nExit = 1
-                    while (event.elev and event.elev[0] == event.floor) :
-                        nExit += 1
-                        event.elev.pop(0)
+                    nExit = []
+                    while (event.elev and event.elev[0].dest == event.floor) :
+                        nExit.append(event.elev.pop(0))
                     
                     # Welford Accumulators for AVGDELAY and STDDELAY per passenger
                     optDelay = opt_delay(event.floor)
-                    tot_delay = self.t - event.tDepart + enterExit(nExit)
-                    normDelay = (tot_delay - optDelay)/optDelay
-                    for _ in range(nExit):
+                    for j in range(len(nExit)):
                         self.iPass += 1
+                        tot_delay = self.t - nExit[j].at + enterExit(nExit)
+                        normDelay = (tot_delay - optDelay)/optDelay
                         d = normDelay - self.avgDelay
                         self.avgDelay = self.avgDelay + d/self.iPass
                         self.stdDelay = self.stdDelay + (d**2)*((self.iPass-1)/self.iPass)
@@ -114,12 +118,11 @@ class ElevatorNES:
                         hq.heappush(self.eventList, (elevReturn.at, next(self.counter), elevReturn))
                     else:
                         nextStop = Event(EventType.ELEVATOR_STOP)
-                        nextStop.tDepart = event.tDepart
                         nextStop.floor = event.elev.pop(0)
                         nextStop.at = self.t + enterExit(nExit) + move_elevator(nextStop.floor)
                         nextStop.elev = event.elev
                         hq.heappush(self.eventList, (nextStop.at, next(self.counter), nextStop))
-                    
+
                     nStops += 1
                 
                 # PROCESS EVENT (ELEVATOR_RETURN)
@@ -134,16 +137,11 @@ class ElevatorNES:
                     print(elevs)
                     for e in elevs:
                         elevStop = Event(EventType.ELEVATOR_STOP)
-                        elevStop.tDepart = self.t
                         elevStop.floor = e.pop(0)
                         elevStop.at = self.t + enterExit(len(e)) + move_elevator(elevStop.floor)
                         elevStop.elev = e
                         hq.heappush(self.eventList, (elevStop.at, next(self.counter), elevStop))
-                        
-                        
-                
-                if (len(self.peopleQueue) > maxQ): maxQ = len(self.peopleQueue)
-                    
+
             # Welford Accumulators for STOPS and MAXQ
             avgStops = nStops/self.nelevs
             self.stops = self.stops + (1/self.i)*(avgStops - self.stops)
