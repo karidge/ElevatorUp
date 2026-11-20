@@ -2,7 +2,7 @@ import sys
 import heapq as hq
 from collections import deque
 from enum import Enum, auto
-from ElevatorUp.Variates import trunc_Exponential, trunc_Geometric, Equilikely
+from Variates import trunc_Exponential, trunc_Geometric, Equilikely
 
 # Define Event data type
 class EventType(Enum):
