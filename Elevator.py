@@ -78,11 +78,12 @@ class ElevatorNES:
                         if self.setF[ind][1] == 0:
                             self.setF.pop(ind)
 
-                    nextGroup = Event(EventType.GROUP_ARRIVAL)
-                    nextGroup.at = self.t + trunc_Exponential(10, 2, 90, self.trace)
-                    nextGroup.groupSize = trunc_Geometric(0.65, 1, min(self.totPeople,8), self.trace)
-                    self.totPeople -= nextGroup.groupSize
-                    hq.heappush(self.eventList, (nextGroup.at, nextGroup))
+                    if self.totPeople:
+                        nextGroup = Event(EventType.GROUP_ARRIVAL)
+                        nextGroup.at = self.t + trunc_Exponential(10, 2, 90, self.trace)
+                        nextGroup.groupSize = trunc_Geometric(0.65, 1, min(self.totPeople,8), self.trace)
+                        self.totPeople -= nextGroup.groupSize
+                        hq.heappush(self.eventList, (nextGroup.at, nextGroup))
 
                 # PROCESS EVENT (ELEVATOR_RETURN)
                 elif event.type == EventType.ELEVATOR_RETURN:
