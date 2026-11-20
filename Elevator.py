@@ -119,7 +119,7 @@ class ElevatorNES:
                                 self.avgDelay = self.avgDelay + d/self.iPass
                                 self.stdDelay = self.stdDelay + (d**2)*((self.iPass-1)/self.iPass)
                             
-                            curr_floor = e[i+1]
+                            curr_floor = e[i]
                             nSameDest = 1
 
                         elevReturn = Event(EventType.ELEVATOR_RETURN)
