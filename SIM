@@ -16,6 +16,13 @@ def main(args):
     # Create Elevator NES object
     _nes = ElevatorNES(FLOORS, ELEVATORS, trace, DAYS)
     
+    STOPS, MAXQ, AVGDELAY, STDDELAY = _nes.NES_Main()
+    
+    print(f"OUTPUT stops {STOPS}")
+    print(f"OUTPUT maxQ {MAXQ}")
+    print(f"OUTPUT avgDelay {AVGDELAY}")
+    print(f"OUTPUT stdDelay {STDDELAY}")
+    
 
 
 if __name__ == "__main__":

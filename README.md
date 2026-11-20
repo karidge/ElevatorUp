@@ -1,8 +1,8 @@
 The autograder should be installed outside of this repository.
-```curl -O https://cs.mcprogramming.com/static/sim/hr/96170718dcca5241/criticalpath-student.tar.bz2```
+```curl -O https://cs.mcprogramming.com/static/sim/hr/96170718dcca5241/elevatorup-student.tar.bz2```
 
 From the assignment page
-```mkdir tmp && cd tmp && tar xjf ../criticalpath-student.tar.bz2```
+```mkdir tmp && cd tmp && tar xjf ../elevatorup-student.tar.bz2```
 
 
 # Deliverables
@@ -15,7 +15,7 @@ $\hat{p}_a(\pi_k)$ is the probability that the path $\pi_k$ is the critical (lon
 
 # Using git
 git should be installed, or your terminal will prompt u to.
-Run ```git clone https://github.com/CSCI523-Simulations/CriticalPath```
+Run ```git clone https://github.com/karidge/ElevatorUp.git```
 The folder will be created.
 
 To push changes to the repository:
