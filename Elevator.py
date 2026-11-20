@@ -147,15 +147,15 @@ def enterExit(n):
 
 def round_robin(queue, nfree):
     j = 0
-    elevs = [[None] for _ in range(nfree)]
+    elevs = [[] for _ in range(nfree)]
     max_alloc = nfree*10
     while (max_alloc > 0 and queue):
         elevs[j].append(queue.popleft())
         j = (j+1) % nfree
         max_alloc -= 1
 
-    nfree = elevs.count(None)
-    elevs = [e for e in elevs if e is not None]
+    nfree = elevs.count([])
+    elevs = [e for e in elevs if len(e)]
 
     return elevs, nfree
 
