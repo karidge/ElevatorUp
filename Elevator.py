@@ -74,7 +74,7 @@ class ElevatorNES:
                 # PROCESS EVENT (GROUP_ARRIVAL)
                 if event.type == EventType.GROUP_ARRIVAL:
                     for _ in range(event.groupSize):
-                        ind = Equilikely(0, len(self.setF), self.trace)
+                        ind = Equilikely(0, len(self.setF)-1, self.trace)
                         p = self.setF[ind][0]
                         self.peopleQueue.append(p)
                         self.setF[ind][1] -= 1
