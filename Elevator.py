@@ -62,8 +62,8 @@ class ElevatorNES:
             
             # "Priming the pump"
             firstArrival = Event(EventType.GROUP_ARRIVAL)
-            firstArrival.at = trunc_Exponential(10, 2, 90)
-            firstArrival.groupSize = trunc_Geometric(0.65, 1, 8)
+            firstArrival.at = trunc_Exponential(10, 2, 90, self.trace)
+            firstArrival.groupSize = trunc_Geometric(0.65, 1, 8, self.trace)
             self.totPeople -= firstArrival.groupSize
             hq.heappush(self.eventList, (firstArrival.at, firstArrival))
             
@@ -74,7 +74,7 @@ class ElevatorNES:
                 # PROCESS EVENT (GROUP_ARRIVAL)
                 if event.type == EventType.GROUP_ARRIVAL:
                     for _ in range(event.groupSize):
-                        ind = Equilikely(0, len(self.setF))
+                        ind = Equilikely(0, len(self.setF), self.trace)
                         p = self.setF[ind][0]
                         self.peopleQueue.append(p)
                         self.setF[ind][1] -= 1
@@ -82,8 +82,8 @@ class ElevatorNES:
                             self.setF.pop(ind)
 
                     nextGroup = Event(EventType.GROUP_ARRIVAL)
-                    nextGroup.at = self.t + trunc_Exponential(10, 2, 90)
-                    nextGroup.groupSize = trunc_Geometric(0.65, 1, 8)
+                    nextGroup.at = self.t + trunc_Exponential(10, 2, 90, self.trace)
+                    nextGroup.groupSize = trunc_Geometric(0.65, 1, 8, self.trace)
                     self.totPeople -= nextGroup.groupSize
                     hq.heappush(self.eventList, (nextGroup.at, nextGroup))
 
