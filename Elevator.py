@@ -118,7 +118,7 @@ class ElevatorNES:
                         hq.heappush(self.eventList, (elevReturn.at, next(self.counter), elevReturn))
                     else:
                         nextStop = Event(EventType.ELEVATOR_STOP)
-                        nextStop.floor = event.elev.pop(0)
+                        nextStop.floor = event.elev.pop(0).dest
                         nextStop.at = self.t + enterExit(nExit) + move_elevator(nextStop.floor)
                         nextStop.elev = event.elev
                         hq.heappush(self.eventList, (nextStop.at, next(self.counter), nextStop))
@@ -137,7 +137,7 @@ class ElevatorNES:
                     print(elevs)
                     for e in elevs:
                         elevStop = Event(EventType.ELEVATOR_STOP)
-                        elevStop.floor = e.pop(0)
+                        elevStop.floor = e.pop(0).dest
                         elevStop.at = self.t + enterExit(len(e)) + move_elevator(elevStop.floor)
                         elevStop.elev = e
                         hq.heappush(self.eventList, (elevStop.at, next(self.counter), elevStop))
