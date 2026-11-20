@@ -154,11 +154,9 @@ def round_robin(queue, nfree):
         j = (j+1) % nfree
         max_alloc -= 1
 
-    nfree = 0
-    for i in range(len(elevs)):
-        if elevs[i] == [None]:
-            elevs.pop(i)
-            nfree += 1
+    nfree = elevs.count(None)
+    elevs = [e for e in elevs if e is not None]
+
     return elevs, nfree
 
 def opt_delay(floor):
