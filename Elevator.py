@@ -168,7 +168,7 @@ def round_robin(queue, nfree):
         j = (j+1) % nfree
         max_alloc -= 1
 
-    elevs = [sorted(e) for e in elevs if len(e)]
+    elevs = [e.sort(key=lambda x: x.dest) for e in elevs if len(e)]
 
     return elevs
 
