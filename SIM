@@ -5,7 +5,7 @@
 
 import sys
 
-from ElevatorUp.Elevator import ElevatorNES
+from Elevator import ElevatorNES
 
 def main(args):
     FLOORS = int(args[1])
