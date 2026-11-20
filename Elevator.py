@@ -56,9 +56,6 @@ class ElevatorNES:
             # Daily Reporting
             nStops = 0
             maxQ = 0
-            iPass = 0
-            avgDelay = 0
-            stdDelay = 0
             
             # "Priming the pump"
             firstArrival = Event(EventType.GROUP_ARRIVAL)
@@ -83,7 +80,7 @@ class ElevatorNES:
 
                     nextGroup = Event(EventType.GROUP_ARRIVAL)
                     nextGroup.at = self.t + trunc_Exponential(10, 2, 90, self.trace)
-                    nextGroup.groupSize = trunc_Geometric(0.65, 1, 8, self.trace)
+                    nextGroup.groupSize = trunc_Geometric(0.65, 1, min(self.totPeople,8), self.trace)
                     self.totPeople -= nextGroup.groupSize
                     hq.heappush(self.eventList, (nextGroup.at, nextGroup))
 
