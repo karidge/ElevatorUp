@@ -1,4 +1,5 @@
 import sys
+import itertools
 import heapq as hq
 from collections import deque
 from enum import Enum, auto
@@ -20,6 +21,7 @@ class ElevatorNES:
         self.nfloors = nfloor
         self.nelevs = nelev
         self.ndays = ndays
+        self.counter = itertools.count()
         
         try:
             self.trace = open(tfile, 'r')
@@ -62,7 +64,7 @@ class ElevatorNES:
             firstArrival.at = trunc_Exponential(10, 2, 90, self.trace)
             firstArrival.groupSize = trunc_Geometric(0.65, 1, 8, self.trace)
             self.totPeople -= firstArrival.groupSize
-            hq.heappush(self.eventList, (firstArrival.at, firstArrival))
+            hq.heappush(self.eventList, (firstArrival.at, next(self.counter), firstArrival))
             
             while (len(self.eventList) > 0) :
                 _, event = hq.heappop(self.eventList)
@@ -83,7 +85,7 @@ class ElevatorNES:
                         nextGroup.at = self.t + trunc_Exponential(10, 2, 90, self.trace)
                         nextGroup.groupSize = trunc_Geometric(0.65, 1, min(self.totPeople,8), self.trace)
                         self.totPeople -= nextGroup.groupSize
-                        hq.heappush(self.eventList, (nextGroup.at, nextGroup))
+                        hq.heappush(self.eventList, (nextGroup.at, next(self.counter), nextGroup))
 
                 # PROCESS EVENT (ELEVATOR_RETURN)
                 elif event.type == EventType.ELEVATOR_RETURN:
@@ -124,7 +126,7 @@ class ElevatorNES:
                         
                         elevReturn = Event(EventType.ELEVATOR_RETURN)
                         elevReturn.at = self.t + tot_delay
-                        hq.heappush(self.eventList, (elevReturn.at, elevReturn))
+                        hq.heappush(self.eventList, (elevReturn.at, next(self.counter), elevReturn))
                     
                 if (len(self.peopleQueue) > maxQ): maxQ = len(self.peopleQueue)
                     

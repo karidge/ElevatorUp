@@ -31,7 +31,6 @@ def trunc_Geometric(p, a, b, trace):
         # print(f"Error: Could not convert string to float or EOF reached.")
         sys.exit(1)
     d = (a+b)//2
-    print(f"a = {a}, b = {b}, d = {d}, p = {p}")
     if (trunc_cdf_Geometric(p, d, a, b) <= u):
         while (trunc_cdf_Geometric(p, d, a, b) <= u): d += 1
     elif (trunc_cdf_Geometric(p, a, a, b) <= u):
