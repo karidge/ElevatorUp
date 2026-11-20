@@ -9,11 +9,15 @@ from Variates import trunc_Exponential, trunc_Geometric, Equilikely
 class EventType(Enum):
     GROUP_ARRIVAL = auto()
     ELEVATOR_RETURN = auto()
+    ELEVATOR_STOP = auto()
 class Event:
     def __init__(self, type):
         self.type = type
         self.at = 0
         self.groupSize = 0
+        self.elev = []
+        self.floor = 0
+        self.tDepart = 0
 
 class ElevatorNES:
     def __init__(self, nfloor, nelev, tfile, ndays):
@@ -87,6 +91,37 @@ class ElevatorNES:
                         self.totPeople -= nextGroup.groupSize
                         hq.heappush(self.eventList, (nextGroup.at, next(self.counter), nextGroup))
 
+                # PROCESS EVENT (ELEVATOR_STOP)
+                elif event.type == EventType.ELEVATOR_STOP:
+                    nExit = 1
+                    while (event.elev and event.elev[0] == event.floor) :
+                        nExit += 1
+                        event.elev.pop(0)
+                    
+                    # Welford Accumulators for AVGDELAY and STDDELAY per passenger
+                    optDelay = opt_delay(event.floor)
+                    tot_delay = self.t - event.tDepart + enterExit(nExit)
+                    normDelay = (tot_delay - optDelay)/optDelay
+                    for _ in range(nExit):
+                        self.iPass += 1
+                        d = normDelay - self.avgDelay
+                        self.avgDelay = self.avgDelay + d/self.iPass
+                        self.stdDelay = self.stdDelay + (d**2)*((self.iPass-1)/self.iPass)
+                    
+                    if not event.elev:
+                        elevReturn = Event(EventType.ELEVATOR_RETURN)
+                        elevReturn.at = self.t + enterExit(nExit) + move_elevator(event.floor)
+                        hq.heappush(self.eventList, (elevReturn.at, next(self.counter), elevReturn))
+                    else:
+                        nextStop = Event(EventType.ELEVATOR_STOP)
+                        nextStop.tDepart = event.tDepart
+                        nextStop.floor = event.elev.pop(0)
+                        nextStop.at = self.t + enterExit(nExit) + move_elevator(nextStop.floor)
+                        nextStop.elev = event.elev
+                        hq.heappush(self.eventList, (nextStop.at, next(self.counter), nextStop))
+                    
+                    nStops += 1
+                
                 # PROCESS EVENT (ELEVATOR_RETURN)
                 elif event.type == EventType.ELEVATOR_RETURN:
                     self.freeElevs += 1
@@ -98,37 +133,15 @@ class ElevatorNES:
                     self.freeElevs = nfree
                     print(elevs)
                     for e in elevs:
-                        e.sort()
-                        tot_delay = enterExit(len(e))
-                        i = 0
-                        nSameDest = 1
-                        curr_floor = 0
-                        while (i < len(e)-1):
-                            while (i < len(e)-1 and e[i] == e[i+1]):
-                                nSameDest += 1
-                                i += 1
-                            tot_delay += move_elevator(e[i]-curr_floor)
-                            nStops += 1
-                            tot_delay += enterExit(nSameDest)
-                            
-                            # Welford Accumulators for AVGDELAY and STDDELAY per passenger
-                            optDelay = opt_delay(e[i])
-                            normDelay = (tot_delay - optDelay)/optDelay
-                            for _ in range(nSameDest):
-                                self.iPass += 1
-                                d = normDelay - self.avgDelay
-                                self.avgDelay = self.avgDelay + d/self.iPass
-                                self.stdDelay = self.stdDelay + (d**2)*((self.iPass-1)/self.iPass)
-                            
-                            curr_floor = e[i]
-                            nSameDest = 1
-
-                        tot_delay += move_elevator(curr_floor)
+                        elevStop = Event(EventType.ELEVATOR_STOP)
+                        elevStop.tDepart = self.t
+                        elevStop.floor = e.pop(0)
+                        elevStop.at = self.t + enterExit(len(e)) + move_elevator(elevStop.floor)
+                        elevStop.elev = e
+                        hq.heappush(self.eventList, (elevStop.at, next(self.counter), elevStop))
                         
-                        elevReturn = Event(EventType.ELEVATOR_RETURN)
-                        elevReturn.at = self.t + tot_delay
-                        hq.heappush(self.eventList, (elevReturn.at, next(self.counter), elevReturn))
-                    print(self.iPass)
+                        
+                
                 if (len(self.peopleQueue) > maxQ): maxQ = len(self.peopleQueue)
                     
             # Welford Accumulators for STOPS and MAXQ
@@ -158,7 +171,7 @@ def round_robin(queue, nfree):
         max_alloc -= 1
 
     nfree = elevs.count([])
-    elevs = [e for e in elevs if len(e)]
+    elevs = [e.sort() for e in elevs if len(e)]
 
     return elevs, nfree
 
