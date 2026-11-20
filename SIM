@@ -18,11 +18,10 @@ def main(args):
     
     STOPS, MAXQ, AVGDELAY, STDDELAY = _nes.NES_Main()
     
-    print(f"OUTPUT stops {STOPS}")
-    print(f"OUTPUT maxQ {MAXQ}")
-    print(f"OUTPUT avgDelay {AVGDELAY}")
-    print(f"OUTPUT stdDelay {STDDELAY}")
-    
+    print(f"OUTPUT stops    {STOPS:5f}")
+    print(f"OUTPUT maxQ     {MAXQ:5f}")
+    print(f"OUTPUT avgDelay {AVGDELAY:5f}")
+    print(f"OUTPUT stdDelay {STDDELAY:5f}")
 
 
 if __name__ == "__main__":

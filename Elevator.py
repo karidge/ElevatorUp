@@ -120,6 +120,8 @@ class ElevatorNES:
                             curr_floor = e[i]
                             nSameDest = 1
 
+                        tot_delay += move_elevator(curr_floor)
+                        
                         elevReturn = Event(EventType.ELEVATOR_RETURN)
                         elevReturn.at = self.t + tot_delay
                         hq.heappush(self.eventList, (elevReturn.at, elevReturn))
