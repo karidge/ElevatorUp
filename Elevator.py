@@ -129,8 +129,8 @@ class ElevatorNES:
 
 
                 if self.freeElevs and self.peopleQueue:
-                    elevs, nfree = round_robin(self.peopleQueue, self.freeElevs)
-                    self.freeElevs = nfree
+                    elevs = round_robin(self.peopleQueue, self.freeElevs)
+                    self.freeElevs = self.nelevs - len(elevs)
                     print(elevs)
                     for e in elevs:
                         elevStop = Event(EventType.ELEVATOR_STOP)
@@ -170,10 +170,9 @@ def round_robin(queue, nfree):
         j = (j+1) % nfree
         max_alloc -= 1
 
-    nfree = elevs.count([])
-    elevs = [e.sort() for e in elevs if len(e)]
+    elevs = [sorted(e) for e in elevs if len(e)]
 
-    return elevs, nfree
+    return elevs
 
 def opt_delay(floor):
     return 6 + move_elevator(floor)
