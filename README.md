@@ -26,7 +26,7 @@ To push changes to the repository:
 # Running script on docker instance
 ```docker run -it simgrading runuser -l blaster```
 In the instance:
-```git clone https://github.com/karidge/ElevatorUp.git```
+```git clone https://github.com/karidge/ElevatorUp.git && cd ElevatorUp && dos2unix SIM && chmod +x SIM```
 ```cd ElevatorUp```
 ```dos2unix SIM```
 ```chmod +x SIM```

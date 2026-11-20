@@ -128,7 +128,7 @@ class ElevatorNES:
                         elevReturn = Event(EventType.ELEVATOR_RETURN)
                         elevReturn.at = self.t + tot_delay
                         hq.heappush(self.eventList, (elevReturn.at, next(self.counter), elevReturn))
-                    
+                    print(self.iPass)
                 if (len(self.peopleQueue) > maxQ): maxQ = len(self.peopleQueue)
                     
             # Welford Accumulators for STOPS and MAXQ
