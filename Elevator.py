@@ -131,8 +131,8 @@ class ElevatorNES:
                         hq.heappush(self.eventList, (elevReturn.at, next(self.counter), elevReturn))
                     else:
                         nextStop = Event(EventType.ELEVATOR_STOP)
-                        nextStop.floor = event.elev.pop(0).dest
-                        nextStop.at = self.t + enterExit(len(nExit)) + move_elevator(nextStop.floor)
+                        nextStop.floor = event.elev[0].dest
+                        nextStop.at = self.t + enterExit(len(nExit)) + move_elevator(nextStop.floor-event.floor)
                         nextStop.elev = event.elev
                         hq.heappush(self.eventList, (nextStop.at, next(self.counter), nextStop))
 
