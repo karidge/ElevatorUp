@@ -134,7 +134,6 @@ class ElevatorNES:
                 if self.freeElevs and self.peopleQueue:
                     elevs = round_robin(self.peopleQueue, self.freeElevs)
                     self.freeElevs = self.nelevs - len(elevs)
-                    print(elevs)
                     for e in elevs:
                         elevStop = Event(EventType.ELEVATOR_STOP)
                         elevStop.floor = e.pop(0).dest
