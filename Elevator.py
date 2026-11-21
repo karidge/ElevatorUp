@@ -106,7 +106,7 @@ class ElevatorNES:
                     optDelay = opt_delay(event.floor)
                     for j in range(len(nExit)):
                         self.iPass += 1
-                        tot_delay = self.t - nExit[j].at + enterExit(nExit)
+                        tot_delay = self.t - nExit[j].at + enterExit(len(nExit))
                         normDelay = (tot_delay - optDelay)/optDelay
                         d = normDelay - self.avgDelay
                         self.avgDelay = self.avgDelay + d/self.iPass
@@ -114,12 +114,12 @@ class ElevatorNES:
                     
                     if not event.elev:
                         elevReturn = Event(EventType.ELEVATOR_RETURN)
-                        elevReturn.at = self.t + enterExit(nExit) + move_elevator(event.floor)
+                        elevReturn.at = self.t + enterExit(len(nExit)) + move_elevator(event.floor)
                         hq.heappush(self.eventList, (elevReturn.at, next(self.counter), elevReturn))
                     else:
                         nextStop = Event(EventType.ELEVATOR_STOP)
                         nextStop.floor = event.elev.pop(0).dest
-                        nextStop.at = self.t + enterExit(nExit) + move_elevator(nextStop.floor)
+                        nextStop.at = self.t + enterExit(len(nExit)) + move_elevator(nextStop.floor)
                         nextStop.elev = event.elev
                         hq.heappush(self.eventList, (nextStop.at, next(self.counter), nextStop))
 
