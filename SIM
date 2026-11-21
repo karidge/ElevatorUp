@@ -14,17 +14,17 @@ def main(args):
     trace = args[3]
     DAYS = int(args[4])
     
-    variate_test(trace)
+    # variate_test(trace)
     
     # Create Elevator NES object
-    # _nes = ElevatorNES(FLOORS, ELEVATORS, trace, DAYS)
+    _nes = ElevatorNES(FLOORS, ELEVATORS, trace, DAYS)
     
-    # STOPS, MAXQ, AVGDELAY, STDDELAY = _nes.NES_Main()
+    STOPS, MAXQ, AVGDELAY, STDDELAY = _nes.NES_Main()
     
-    # print(f"OUTPUT stops    {STOPS:5f}")
-    # print(f"OUTPUT maxQ     {MAXQ:5f}")
-    # print(f"OUTPUT avgDelay {AVGDELAY:5f}")
-    # print(f"OUTPUT stdDelay {STDDELAY:5f}")
+    print(f"OUTPUT stops    {STOPS:5f}")
+    print(f"OUTPUT maxQ     {MAXQ:5f}")
+    print(f"OUTPUT avgDelay {AVGDELAY:5f}")
+    print(f"OUTPUT stdDelay {STDDELAY:5f}")
 
 
 if __name__ == "__main__":
