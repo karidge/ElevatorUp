@@ -19,7 +19,7 @@ class Event:
         self.groupSize = 0
         self.elev = []
         self.floor = 0
-        self.nStops = 0
+
 
 # Define Person class to store each pedestrian's destination floor and arrival time
 class Person:
@@ -146,7 +146,7 @@ class ElevatorNES:
                 # Elevator dispatch
                 if self.freeElevs and self.peopleQueue:
                     elevs = round_robin(self.peopleQueue, self.freeElevs)
-                    self.freeElevs = self.nelevs - len(elevs)
+                    self.freeElevs -= len(elevs)
                     for e in elevs:
                         elevStop = Event(EventType.ELEVATOR_STOP)
                         elevStop.floor = e[0].dest

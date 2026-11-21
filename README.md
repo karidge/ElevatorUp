@@ -1,10 +1,10 @@
 
 # Deliverables
 1. Simulation event types:
-    In total, my simulation makes use of three event types (Elevator.py Lines 8-22):
+    In total, my simulation makes use of three event types (Elevator.py Lines 8-21):
         - GROUP_ARRIVAL > with parameters .type, .at, and .groupSize
             This is the event type that makes use of the truncated exponential and geometric variate functions I built. For each person in groupSize, I create a Person object with an initial arrival time to the ground floor and a destination floor that follows an Equilikely distribution based on a set F I've created to log the number of people left that still need to go to each floor. These people are then added to a people queue to wait for an elevator.
-        - ELEVATOR_STOP > with parameters .type, .at, .elev, .floor, and .nStops
+        - ELEVATOR_STOP > with parameters .type, .at, .elev, .floor
             This is the event type that occurs whenever an elevator arrives at a floor that's not the ground floor. While at the specific floor it calculates the normal delay times for each passenger that is exiting, and then creates a new ELEVATOR_STOP event for the next person in the elevator going to a different floor.
         - ELEVATOR_RETURN > with parameters .type and .at
             This is the event type that occurs when an elevator has dropped off all of its occupants at their given floors. It is scheduled as a case when an event is ELEVATOR_STOP, and simply tells the simulation that there is one more free elevator at the ground floor.
