@@ -5,11 +5,13 @@ from collections import deque
 from enum import Enum, auto
 from Variates import trunc_Exponential, trunc_Geometric, Equilikely
 
-# Define Event data type
+# Define Event data types
 class EventType(Enum):
     GROUP_ARRIVAL = auto()
-    ELEVATOR_RETURN = auto()
     ELEVATOR_STOP = auto()
+    ELEVATOR_RETURN = auto()
+    
+# Define Event class with necessary parameters
 class Event:
     def __init__(self, type):
         self.type = type
@@ -19,33 +21,36 @@ class Event:
         self.floor = 0
         self.nStops = 0
 
+# Define Person class to store each pedestrian's destination floor and arrival time
 class Person:
     def __init__(self, dest, at):
         self.dest = dest
         self.at = at
 
+# Main NES class
 class ElevatorNES:
     def __init__(self, nfloor, nelev, tfile, ndays):
 
+        # Initialize given input parameters and counter needed for priority queue
         self.nfloors = nfloor
         self.nelevs = nelev
         self.ndays = ndays
         self.counter = itertools.count()
         
+        # Initialize random number trace file
         try:
             self.trace = open(tfile, 'r')
         except FileNotFoundError:
             # print(f"Error: The trace file at {tfile} was not found.")
             sys.exit(1)
         
+        # Initialize event list and Simulation clock
         self.eventList = []
         self.t = 0
         
-        self.freeElevs = self.nelevs
-        
-        
-        # SSQ specific state
+        # Initialize ground floor queue for pedestrians and set the number of free elevators to the total number of elevators
         self.peopleQueue = deque()
+        self.freeElevs = self.nelevs
 
         # For Reporting
         self.i = 0
@@ -55,30 +60,36 @@ class ElevatorNES:
         self.avgDelay = 0
         self.stdDelay = 0
         
-        
+    # Main NES function
     def NES_Main(self):
+        # Loop through given number of days
         for _ in range(self.ndays):
             
+            # Iterate daily counter
             self.i += 1
 
+            # Initialize day parameters
             self.totPeople = 100*self.nfloors
             self.setF = [[i+1, 100] for i in range(self.nfloors)]
             
-            # Daily Reporting
+            # Day Reporting
             nStops = 0
             maxQ = 0
             
-            # "Priming the pump"
+            # "Priming the pump" with first group arrival
             firstArrival = Event(EventType.GROUP_ARRIVAL)
             firstArrival.at = trunc_Exponential(10, 2, 90, self.trace)
             firstArrival.groupSize = trunc_Geometric(0.65, 1, 8, self.trace)
             self.totPeople -= firstArrival.groupSize
             hq.heappush(self.eventList, (firstArrival.at, next(self.counter), firstArrival))
             
+            # Main NES while loop
             while (len(self.eventList) > 0) :
+                # Get next event and set time
                 _, _, event = hq.heappop(self.eventList)
                 self.t = event.at
                 
+                # MAXQ value update
                 if (len(self.peopleQueue) > maxQ): maxQ = len(self.peopleQueue)
                 
                 # PROCESS EVENT (GROUP_ARRIVAL)
@@ -132,7 +143,7 @@ class ElevatorNES:
                     self.freeElevs += 1
                     nStops += 1
 
-
+                # Elevator dispatch
                 if self.freeElevs and self.peopleQueue:
                     elevs = round_robin(self.peopleQueue, self.freeElevs)
                     self.freeElevs = self.nelevs - len(elevs)
@@ -150,16 +161,19 @@ class ElevatorNES:
     
         return self.stops, self.maxQ, self.avgDelay, (self.stdDelay/self.iPass)**0.5
     
-    
+
+# Helper function for elevator movement time between h floors
 def move_elevator(h):
-    if h == 0: return 0
-    elif h == 1: return 8
+    if h == 1: return 8
     else: return (2*8 + 5*(h-2))
 
+# Helper function for pedestrian enter and exit times based on the number of people n
 def enterExit(n):
     times = [3, 5, 7, 9, 11, 13, 15, 17, 19, 22]
     return times[n-1]
 
+# Function to distribute people in the people queue among the available number of free elevators
+# Returns a list of elevators, each with a list of occupants
 def round_robin(queue, nfree):
     j = 0
     elevs = [[] for _ in range(nfree)]
@@ -173,5 +187,6 @@ def round_robin(queue, nfree):
 
     return elevs
 
+# Helper function for calculating the optimal delay time based on a pedestrian's destination floor
 def opt_delay(floor):
     return 6 + move_elevator(floor)

@@ -6,21 +6,21 @@
 import sys
 
 from Elevator import ElevatorNES
-from Variates import variate_test
 
 def main(args):
+    # Define input parameters
     FLOORS = int(args[1])
     ELEVATORS = int(args[2])
     trace = args[3]
     DAYS = int(args[4])
     
-    # variate_test(trace)
-    
     # Create Elevator NES object
     _nes = ElevatorNES(FLOORS, ELEVATORS, trace, DAYS)
     
+    # Run the main NES for the project
     STOPS, MAXQ, AVGDELAY, STDDELAY = _nes.NES_Main()
     
+    # Print OUTPUTs
     print(f"OUTPUT stops    {STOPS:5f}")
     print(f"OUTPUT maxQ     {MAXQ:5f}")
     print(f"OUTPUT avgDelay {AVGDELAY:5f}")
