@@ -138,7 +138,7 @@ class ElevatorNES:
                     self.freeElevs = self.nelevs - len(elevs)
                     for e in elevs:
                         elevStop = Event(EventType.ELEVATOR_STOP)
-                        elevStop.floor = e.pop(0).dest
+                        elevStop.floor = e[0].dest
                         elevStop.at = self.t + enterExit(len(e)) + move_elevator(elevStop.floor)
                         elevStop.elev = e
                         hq.heappush(self.eventList, (elevStop.at, next(self.counter), elevStop))
