@@ -79,6 +79,8 @@ class ElevatorNES:
                 _, _, event = hq.heappop(self.eventList)
                 self.t = event.at
                 
+                if (len(self.peopleQueue) > maxQ): maxQ = len(self.peopleQueue)
+                
                 # PROCESS EVENT (GROUP_ARRIVAL)
                 if event.type == EventType.GROUP_ARRIVAL:
                     for _ in range(event.groupSize):
