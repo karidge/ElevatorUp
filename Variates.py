@@ -3,7 +3,7 @@ import math
 
 # Truncated Exponential Variate function using the method of constrained inversion
 def trunc_Exponential(mu, a, b, trace):
-    alpha = cdf_Exponential(mu, a-1)
+    alpha = cdf_Exponential(mu, a)
     beta = 1 - cdf_Exponential(mu, b)
     try:
         u_val = trace.readline()
