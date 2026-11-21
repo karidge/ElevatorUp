@@ -52,4 +52,16 @@ def Equilikely(a, b, trace):
     except ValueError:
         # print(f"Error: Could not convert string to float or EOF reached.")
         sys.exit(1)
-    return (a+(int)((b-a+1)*u))      
+    return (a+(int)((b-a+1)*u))
+
+def variate_test(tfile):
+    try:
+        trace = open(tfile, 'r')
+    except FileNotFoundError:
+        # print(f"Error: The trace file at {tfile} was not found.")
+        sys.exit(1)
+
+    b = [trunc_Geometric(trace, 1, 8, 0.65) for _ in range(10_0000)]
+    d = [0]*8
+    for i in b: d[i-1] += 1
+    print(*d)
